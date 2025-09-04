@@ -1,0 +1,37 @@
+#' Compute Michelson contrast
+#'
+#' Calculates the Michelson contrast of a numeric vector, defined as
+#' \deqn{(I_max - I_min) / (I_max + I_min)} where \eqn{I_max} and \eqn{I_min}
+#' are the maximum and minimum values of the input, respectively.
+#'
+#' @param x A numeric vector of intensities or signal values.
+#'
+#' @return A single numeric value giving the Michelson contrast.
+#' Returns `NA` if \code{x} is empty, contains no finite values, or if
+#' \eqn{I_max + I_min = 0}.
+#'
+#' @examples
+#' michelson_contrast(c(0.2, 0.5, 0.8))
+#' # [1] 0.6
+#'
+#' michelson_contrast(c(1, 1, 1))   # zero contrast
+#' # [1] 0
+#'
+#' michelson_contrast(numeric(0))   # empty input
+#' # [1] NA
+#'
+#' @export
+michelson_contrast <- function(x) {
+  if (length(x) == 0 || all(!is.finite(x))) {
+    return(NA_real_)
+  }
+
+  Imax <- max(x, na.rm = TRUE)
+  Imin <- min(x, na.rm = TRUE)
+
+  if ((Imax + Imin) == 0) {
+    return(NA_real_) # avoid divide-by-zero
+  } else {
+    return((Imax - Imin) / (Imax + Imin))
+  }
+}
